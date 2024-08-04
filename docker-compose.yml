@@ -1,10 +1,33 @@
-version: "3.9"
-
 services:
   postgres:
     image: postgres:16
     restart: always
     environment:
       POSTGRES_PASSWORD: postgres
+      POSTGRES_DATABASE: nerves_hub_dev
     ports:
       - 5432:5432
+    volumes:
+      - postgres:/data
+
+  web:
+    build: .
+    restart: always
+    ports:
+      - 4000:4000
+    environment:
+      APP_NAME: nerveshub
+      PRIVATE_IP: 127.0.0.1
+      HOST: nerveshub.local
+      LIVE_VIEW_SIGNING_SALT: dikhjugiue7833899834euhr
+      DATABASE_URL: "postgres://postgres@postgres:postgres:5432/nerves_hub_dev"
+      DEVICE_SSL_KEYFILE: /etc/ssl/private/new_ssnakeoil.key
+      DEVICE_SSL_CERTFILE: /etc/ssl/certs/new_ssnakeoil.crt
+    volumes:
+      - /etc/ssl/private/new_ssnakeoil.key:/etc/ssl/private/new_ssnakeoil.key
+      - /etc/ssl/certs/new_ssnakeoil.crt:/etc/ssl/certs/new_ssnakeoil.crt
+    links:
+      - postgres
+
+volumes:
+  postgres:

@@ -13,7 +13,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 ###
 FROM ${BUILDER_IMAGE} as deps
 
-ENV MIX_ENV=prod
+ENV MIX_ENV=dev
 
 RUN apt-get update && apt-get install -y git
 RUN mix local.hex --force && mix local.rebar --force
@@ -58,7 +58,7 @@ ENV HEX_HTTP_TIMEOUT=20
 RUN mix local.hex --force && \
     mix local.rebar --force
 
-ENV MIX_ENV=prod
+ENV MIX_ENV=dev
 ENV SECRET_KEY_BASE=nokey
 
 COPY mix.lock ./
@@ -112,10 +112,10 @@ ENV LC_ALL en_US.UTF-8
 
 WORKDIR /app
 
-COPY --from=build /build/_build/prod/rel/nerves_hub ./
+COPY --from=build /build/_build/dev/rel/nerves_hub ./
 
 ENV HOME=/app
-ENV MIX_ENV=prod
+ENV MIX_ENV=dev
 ENV SECRET_KEY_BASE=nokey
 ENV PORT=4000
 
